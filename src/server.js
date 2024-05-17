@@ -32,7 +32,7 @@ let currentUrl = '';
 let flags = [];
 
 // Refresh timer object
-let timer = {};
+let timer = null;
 
 // Default refresh interval (3600 seconds)
 const DEFAULT_REFRESH_INTERVAL = 3600 * 1000; // 3600 seconds in milliseconds
@@ -200,7 +200,10 @@ async function setTimer(interval) {
 }
 
 async function clearTimer(){
-  await clearIntervalAsync(timer);
+  if (timer) {
+    await clearIntervalAsync(timer);
+    timer = null;
+  }
 }
 
 async function main(){
@@ -324,7 +327,7 @@ app.post('/autorefresh/:interval', async(req, res) => {
   }
   else
   {
-    await setTimer((req.params.interval * 1000))
+    await setTimer(req.params.interval * 1000);
   }
   
   return res.status(200).send('ok');
