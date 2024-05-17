@@ -34,8 +34,8 @@ let flags = [];
 // Refresh timer object
 let timer = null;
 
-// Default refresh interval (3600 seconds)
-const DEFAULT_REFRESH_INTERVAL = 3600 * 1000; // 3600 seconds in milliseconds
+// Default refresh interval (first number seconds * 1000 to get to milliseconds)
+const DEFAULT_REFRESH_INTERVAL = 3600 * 1000;
 
 // Returns the URL to display, adhering to the hierarchy:
 // 1) the configured LAUNCH_URL
