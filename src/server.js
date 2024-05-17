@@ -23,7 +23,7 @@ const FLAGS = process.env.FLAGS || null;
 const EXTRA_FLAGS = process.env.EXTRA_FLAGS || null;
 const HTTPS_REGEX = /^https?:\/\//i //regex for HTTP/S prefix
 
-// Environment variables which can be overriden from the API
+// Environment variables which can be overridden from the API
 let kioskMode = process.env.KIOSK || '0';
 let enableGpu = process.env.ENABLE_GPU || '0';
 
@@ -32,9 +32,12 @@ let currentUrl = '';
 let flags = [];
 
 // Refresh timer object
-let timer = {0:2};
+let timer = {};
 
-// Returns the URL to display, adhering to the hieracrchy:
+// Default refresh interval (3600 seconds)
+const DEFAULT_REFRESH_INTERVAL = 3600 * 1000; // 3600 seconds in milliseconds
+
+// Returns the URL to display, adhering to the hierarchy:
 // 1) the configured LAUNCH_URL
 // 2) a discovered HTTP service on the device
 // 3) the default static HTML
@@ -182,6 +185,7 @@ async function SetDefaultFlags() {
 }
 
 async function setTimer(interval) {
+  await clearTimer(); // Ensure any existing timer is cleared before setting a new one
   timer = setIntervalAsync(
     async () => {
       try {
@@ -193,7 +197,6 @@ async function setTimer(interval) {
     },
     interval
   )
-  
 }
 
 async function clearTimer(){
@@ -204,8 +207,8 @@ async function main(){
   await SetDefaultFlags();
   let url = await getUrlToDisplayAsync();
   await launchChromium(url);
+  await setTimer(DEFAULT_REFRESH_INTERVAL); // Set default autorefresh interval
 }
-
 
 main().catch(err => {
   console.log("Main error: ", err);
