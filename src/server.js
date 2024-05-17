@@ -32,7 +32,7 @@ let currentUrl = '';
 let flags = [];
 
 // Refresh timer object
-let timer = {};
+let timer = {0:2};
 
 // Returns the URL to display, adhering to the hieracrchy:
 // 1) the configured LAUNCH_URL
